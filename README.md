@@ -11,14 +11,15 @@
 
 ```text
 正确用法：
-① 读当前阶段的"目标 + 认知跃迁"（3 分钟）
-② 看"第一件事"→ 打开 IDE 写代码 ✅
-③ 卡住了？查"常见失败点"
-④ 跑通后，用"回顾问题"复盘
-⑤ 确认"完成标准"全部打勾 → 进入下一阶段
+① **先花 1-2 天做 Phase 0 名词扫盲**（认全关键概念）
+② 读当前阶段的"目标 + 认知跃迁"（3 分钟）
+③ 看"第一件事"→ 打开 IDE 写代码 ✅
+④ 卡住了？查"常见失败点"
+⑤ 跑通后，用"回顾问题"复盘
+⑥ 确认"完成标准"全部打勾 → 进入下一阶段
 
 错误用法：
-先读完全部 V0~V5 → 觉得自己懂了 → 什么都没写
+先读完全部 Phase 0 ~ V5 → 觉得自己懂了 → 什么都没写
 ```
 
 ---
@@ -39,6 +40,7 @@
 ## 📊 总路线图
 
 ```text
+Phase 0  名词扫盲         认词：Agent / Tool / Memory / Planning / Skill（1-2 天）
 第 1 月  Agent 基础     → 球球 V0    LLM + Tool 循环跑通
 第 2 月  Planning       → 球球 V1    拆解任务、规划执行
 第 3 月  Coding Agent   → 球球 V2    自己改代码、提交 Git
@@ -46,6 +48,100 @@
 第 5 月  MCP 生态       → 球球 V4    外部插件、MCP 工具
 第 6 月  Skill 体系     → 球球 V5    专业能力包切换
 ```
+
+---
+
+# 📖 Phase 0：名词扫盲（1~2 天）
+
+> **一句话任务：** 认全 Agent 领域的关键名词——你不需要理解原理，只需要"见过这些词"。
+
+## 🧠 认知跃迁
+
+> 学完这一层，你**第一次真正理解：** Agent 不是"高级聊天机器人"，它是 **LLM（大脑）+ Planning（规划）+ Tool Use（动手）+ Memory（记忆）** 的组合体。
+
+## 🔄 为什么需要这一阶段？
+
+如果你直接开始写 Agent Loop，你会被一堆名词砸晕：**Tool Schema、Function Calling、Agent State、Tool Result、Context Window、Token Limit……** 你一边写代码一边查概念，效率很低。Phase 0 就是花 1-2 天先认全这些词，后面写代码时碰到不会慌。
+
+---
+
+## ✋ 第一件事
+
+打开 [runoob AI Agent 教程](https://www.runoob.com/ai/ai-agent-intro.html) 或任何一篇 Agent 入门文章。
+
+---
+
+## 要认识的 5 个核心概念
+
+不需要理解细节，**能用自己的话解释一句**就行：
+
+### ① Agent
+
+```text
+一句话：一个有大脑（LLM）、能动手（Tool）、能记事（Memory）、能规划（Planning）的系统。
+不是：一个聊天框。
+```
+
+### ② Tool
+
+```text
+一句话：Agent 用来跟世界交互的"把手"——读文件、查数据库、发请求、执行命令。
+本质上就是一个函数，但 LLM 能"看到它"并"决定用它"。
+```
+
+### ③ Memory
+
+```text
+一句话：Agent 的"记事本"——短期记忆（当前对话上下文）+ 长期记忆（存到数据库里）。
+没有 Memory 的 Agent 每次对话都是"第一次见你"。
+```
+
+### ④ Planning
+
+```text
+一句话：把"帮我做个登录功能"拆成 "1. 分析路由 → 2. 设计数据库 → 3. 写代码 → 4. 测试"。
+复杂任务 LLM 一步做不完，需要拆成子任务一步步做。
+```
+
+### ⑤ Skill
+
+```text
+一句话：Agent 的"专业模式"——切到架构师模式它会出设计文档，切到审查模式它会找 bug。
+本质就是换一套提示词 + 工具组合。
+```
+
+---
+
+## 🎯 最小验证
+
+遮住上面的解释，对每个词说一句自己的话。能说清楚就算过。
+
+---
+
+## 📚 资源
+
+- [runoob AI Agent（智能体）教程](https://www.runoob.com/ai/ai-agent-intro.html) — 中文，内容结构清晰，适合扫盲
+- [Anthropic Tool Use 概述](https://docs.anthropic.com/en/docs/build-with-claude/tool-use) — 英文原版，更深入
+
+---
+
+## ✅ Phase 0 完成标准
+
+- [ ] 能用自己的话解释 Agent、Tool、Memory、Planning、Skill 这 5 个词
+- [ ] 不会混淆"Tool"和"Function Calling"（Tool 是函数本身，Function Calling 是 LLM 调用函数的机制）
+- [ ] 知道 Agent ≠ Chatbot（Agent 能行动，Chatbot 只能说话）
+
+**完成 Phase 0 只需要 1-2 天。完成后直接进入 V0 写代码。**
+
+---
+
+## 🔄 回顾
+
+你不需要写什么笔记。你只需要记住：
+
+> **Agent = LLM + Tool + Memory + Planning**
+
+这个公式你会重复见到无数次。现在只是认个脸熟，后面全部都会亲手实现。
 
 ---
 
