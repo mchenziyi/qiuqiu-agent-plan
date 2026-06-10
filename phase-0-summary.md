@@ -74,6 +74,14 @@
 
 ---
 
+## 📚 参考资源
+
+- [runoob AI Agent 教程首页](https://www.runoob.com/ai-agent/ai-agent-tutorial.html) — 整个教程的入口
+- [AI Agent 简介](https://www.runoob.com/ai-agent/ai-agent-intro.html)
+- [AI Agent 核心组件](https://www.runoob.com/ai-agent/ai-agent-core.html)
+
+---
+
 ## 🔜 下一步
 
 进入 **V0：Agent 基础**——写 Go 程序调通 LLM，实现第一个 Agent Loop。
