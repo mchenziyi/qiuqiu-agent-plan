@@ -58,22 +58,68 @@ a.RestoreFromCheckpoint()
 
 **SubAgent 子 Agent（第 13 项）：**
 
+### 解决了什么问题
+
+主 Agent 在执行复杂任务时，经常需要中途去做一些独立子任务。如果直接在主 Agent 的对话历史里问，会污染上下文。SubAgent 就是让主 Agent **新开一个草稿纸**，独立算完拿结果回来。
+
+### 设计思路
+
+```
+主 Agent（messages 装着"加健康检查接口"的全部上下文）
+  │
+  ├── 发现需要查 Gin 路由写法
+  │     ↓
+  ├── SpawnSubAgent("Gin 怎么注册路由")
+  │     ↓
+  │     子 Agent 新建 messages 独立执行
+  │     返回结果
+  │
+  └── 主 Agent 拿到结果继续，messages 不受影响
+```
+
+关键点：
+1. **共享 LLM 客户端** — 不重新创建，省资源
+2. **共享工具列表** — 子 Agent 也能读写文件、搜索代码
+3. **独立对话历史** — 子 Agent 有自己的 messages，执行完销毁，不污染主 Agent
+4. **独立 session** — 子 Agent 有独立的 Event Log，可以单独 replay
+
+### 代码实现
+
 ```go
-// agent.go — 主 Agent 创建子 Agent
 func (a *Agent) SpawnSubAgent(ctx context.Context, task string) (string, error) {
     sub := &Agent{
-        client:   a.client,   // 共享 LLM 客户端
+        client:   a.client,                    // 共享 LLM 客户端
         model:    a.model,
-        allTools: a.allTools, // 共享工具
-        messages: make([]Message, 0), // 独立对话历史
-        session:  "sub_" + ...
+        allTools: a.allTools,                  // 共享工具
+        messages: make([]openai.ChatCompletionMessage, 0), // 全新对话历史
+        store:    a.store,
+        session:  fmt.Sprintf("%s_sub_%d", a.session, time.Now().UnixNano()),
+        Quiet:    a.Quiet,
     }
     return sub.Run(ctx, task)
 }
 ```
 
-用法：`/subagent 查一下 strings.Builder 的用法`
+子 Agent 就是**一个完整的新 Agent**，跟主 Agent 唯一的区别是共享了 LLM 客户端和工具列表。
 
+### 使用场景
+
+| 场景 | 主 Agent 任务 | 子 Agent 任务 |
+|------|-------------|-------------|
+| 查文档 | 加 JWT 认证 | 查 golang-jwt 的用法 |
+| 写测试 | 修改用户模块 | 为当前修改写单元测试 |
+| 调研 | 重构支付模块 | 分析当前代码结构 |
+| 独立验证 | 合并 PR | 检查代码安全性 |
+
+### 当前限制与未来方向
+
+| 限制 | 说明 | 改进方向 |
+|------|------|---------|
+| 串行 | 主 Agent 等子 Agent 返回后再继续 | 支持并行派发多个 SubAgent |
+| 无通信 | 子 Agent 不能调用主 Agent 的工具 | 支持子 Agent 回调主 Agent |
+| 手动 | 目前通过 /subagent 手动触发 | 让主 Agent 在 Plan 执行中自动派发 |
+
+用法：`/subagent 查一下 flag 包怎么解析参数`
 **安静模式（第 12 项）：**
 
 ```go
