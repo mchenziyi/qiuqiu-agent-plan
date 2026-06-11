@@ -1,4 +1,4 @@
-# 第 4 章：Runtime——Event Sourcing 与崩溃恢复
+﻿# 第 4 章：Runtime——Event Sourcing 与崩溃恢复
 
 > **本章对应 V3，给 Agent 加上"黑匣子"。**
 > **代码 Tag：`v3`**
@@ -66,6 +66,26 @@ func (a *Agent) Run(ctx, input) {
 ### Replay
 
 从 Event Log 读取全部事件，格式化成可读的对话记录。输入 `replay` 命令查看。
+
+---
+
+### Checkpoint 快照（进阶）
+
+Event Log 只有追加没有快照，如果对话很长，崩溃后重放全部事件会很慢。
+Checkpoint 就是定期保存 messages 快照，崩溃后从最近的快照恢复，只重放快照之后的新事件。
+
+```go
+// 保存快照
+func (s *Store) SaveCheckpoint(sessionID, lastEventID, messagesJSON string) error
+
+// 读取快照
+func (s *Store) LoadCheckpoint(sessionID string) (*Checkpoint, error)
+
+// 只读取某个 Event 之后的新事件（用于从 Checkpoint 恢复后增量重放）
+func (s *Store) LoadSince(sessionID, afterEventID string) ([]Event, error)
+```
+
+QiuQiuPro 的 Agent 每执行 5 次工具调用自动保存一次 Checkpoint，任务完成时也保存。
 
 ---
 
