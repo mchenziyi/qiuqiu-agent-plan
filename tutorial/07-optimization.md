@@ -56,6 +56,24 @@ func (a *Agent) SaveCheckpoint() {
 a.RestoreFromCheckpoint()
 ```
 
+**SubAgent 子 Agent（第 13 项）：**
+
+```go
+// agent.go — 主 Agent 创建子 Agent
+func (a *Agent) SpawnSubAgent(ctx context.Context, task string) (string, error) {
+    sub := &Agent{
+        client:   a.client,   // 共享 LLM 客户端
+        model:    a.model,
+        allTools: a.allTools, // 共享工具
+        messages: make([]Message, 0), // 独立对话历史
+        session:  "sub_" + ...
+    }
+    return sub.Run(ctx, task)
+}
+```
+
+用法：`/subagent 查一下 strings.Builder 的用法`
+
 **安静模式（第 12 项）：**
 
 ```go
